@@ -1,14 +1,12 @@
 package de.htwsaar.vs.chat.service;
 
-import de.htwsaar.vs.chat.auth.UserPrincipal;
 import de.htwsaar.vs.chat.model.Chat;
 import de.htwsaar.vs.chat.model.Message;
 import de.htwsaar.vs.chat.repository.MessageRepository;
+import de.htwsaar.vs.chat.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -18,6 +16,7 @@ import reactor.core.publisher.Mono;
  *
  * @author Niklas Reinhard
  * @author Julian Quint
+ * @author Mahan Karimi
  * @see MessageRepository
  */
 @Service
@@ -28,6 +27,10 @@ public class MessageService {
     @Autowired
     public MessageService(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
+    }
+
+    public Mono<Message> findById(String messageId) {
+        return messageRepository.findById(messageId);
     }
 
     public Flux<Message> findAllMessages(String chatId) {
@@ -46,16 +49,13 @@ public class MessageService {
         chat.setId(chatId);
         message.setChat(chat);
 
-        return ReactiveSecurityContextHolder.getContext()
-                .map(SecurityContext::getAuthentication)
-                .map(Authentication::getPrincipal)
-                .cast(UserPrincipal.class)
+        return SecurityUtils.getPrincipal()
                 .doOnNext(principal -> message.setSender(principal.getUser()))
                 .flatMap(principal -> messageRepository.save(message));
     }
 
-    // TODO @PreAuthorize
-    public Mono<Void> deleteMessage(String messageId) {
-        return messageRepository.deleteById(messageId);
+    @PreAuthorize("@webSecurity.isMessageSender(authentication, #message)")
+    public Mono<Void> deleteMessage(Message message) {
+        return messageRepository.delete(message);
     }
 }

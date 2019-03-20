@@ -56,6 +56,18 @@ public class ChatHandler {
                 .then(ServerResponse.noContent().build());
     }
 
+    public Mono<ServerResponse> getNewChats(ServerRequest request) {
+        return ServerResponse.ok()
+                .contentType(TEXT_EVENT_STREAM)
+                .body(chatService.streamNewChats(), Chat.class);
+    }
+
+    public Mono<ServerResponse> getNewMessages(ServerRequest request) {
+        return ServerResponse.ok()
+                .contentType(TEXT_EVENT_STREAM)
+                .body(chatService.streamNewMessages(), Message.class);
+    }
+
     public Mono<ServerResponse> getAllMembers(ServerRequest request) {
         String chatId = request.pathVariable("chatid");
 
@@ -113,13 +125,8 @@ public class ChatHandler {
         String messageId = request.pathVariable("messageid");
 
         return messageService
-                .deleteMessage(messageId)
+                .findById(messageId)
+                .flatMap(messageService::deleteMessage)
                 .then(ServerResponse.noContent().build());
-    }
-
-    public Mono<ServerResponse> getNewMessages(ServerRequest request) {
-        return ServerResponse.ok()
-                .contentType(TEXT_EVENT_STREAM)
-                .body(chatService.streamNewMessages(), Message.class);
     }
 }
