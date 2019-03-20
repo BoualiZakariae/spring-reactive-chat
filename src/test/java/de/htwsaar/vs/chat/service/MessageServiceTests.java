@@ -86,10 +86,11 @@ class MessageServiceTests {
     void delete() {
         Message message0 = new Message();
         message0.setContent("Test");
+        message0.setId("0");
 
-        given(messageRepository.deleteById("0")).willReturn(Mono.empty());
+        given(messageRepository.delete(message0)).willReturn(Mono.empty());
 
-        StepVerifier.create(messageService.deleteMessage("0"))
+        StepVerifier.create(messageService.deleteMessage(message0))
                 .verifyComplete();
     }
 
