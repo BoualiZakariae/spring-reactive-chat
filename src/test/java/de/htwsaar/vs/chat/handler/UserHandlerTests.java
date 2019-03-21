@@ -107,11 +107,6 @@ class UserHandlerTests {
     @Test
     @WithMockUser
     void getExistingUser() {
-        User user0 = new User();
-        user0.setId("0");
-
-        User user1 = new User();
-        user1.setId("1");
 
         User user2 = new User();
         user2.setId("2");
@@ -279,8 +274,6 @@ class UserHandlerTests {
 
         webTestClient
                 .delete().uri("/api/v1/users/{id}/roles", user0.getId())
-                /*.contentType(APPLICATION_JSON)
-                .body(BodyInserters.fromObject(payload))*/
                 .exchange()
                 .expectStatus().isNoContent();
     }

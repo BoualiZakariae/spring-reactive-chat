@@ -73,8 +73,6 @@ class ChatHandlerTests {
     @Disabled
     void getPutChat() {
         Chat chat0 = new Chat();
-        Chat chat1 = new Chat();
-        Chat chat2 = new Chat();
 
         User user1 = new User();
         user1.setUsername("testusername");
@@ -105,9 +103,6 @@ class ChatHandlerTests {
     void deleteChat() {
         Chat chat0 = new Chat();
         chat0.setId("1");
-
-        Chat chat1 = new Chat();
-        Chat chat2 = new Chat();
 
 
         given(chatService.deleteChat("1")).willReturn(Mono.empty());
@@ -197,12 +192,6 @@ class ChatHandlerTests {
 
         User user0 = new User();
         user0.setId("0");
-
-        User user1 = new User();
-        user1.setId("1");
-
-        User user2 = new User();
-        user2.setId("2");
 
         Chat chat0 = new Chat();
         chat0.setId("0");
