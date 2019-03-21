@@ -41,6 +41,18 @@ class MessageServiceTests {
     }
 
     @Test
+    void findById() {
+        Message message0 = new Message();
+        message0.setId("0");
+
+        given(messageRepository.findById(message0.getId())).willReturn(Mono.just(message0));
+
+        StepVerifier.create(messageService.findById(message0.getId()))
+                .expectNext(message0)
+                .verifyComplete();
+    }
+
+    @Test
     void findAllMessages() {
         Message message0 = new Message();
         Message message1 = new Message();
