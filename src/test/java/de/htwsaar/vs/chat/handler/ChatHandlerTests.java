@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -24,7 +23,6 @@ import java.util.*;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.TEXT_EVENT_STREAM;
 
 /**
  * JUnit tests for {@link ChatHandler}.
@@ -44,9 +42,6 @@ class ChatHandlerTests {
 
     @MockBean
     private MessageService messageService;
-
-    @MockBean
-    private PasswordEncoder passwordEncoder;
 
     @Test
     @WithMockUser

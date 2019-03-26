@@ -1,17 +1,13 @@
 package de.htwsaar.vs.chat.service;
 
 import de.htwsaar.vs.chat.model.Message;
-import de.htwsaar.vs.chat.model.User;
 import de.htwsaar.vs.chat.repository.MessageRepository;
-import de.htwsaar.vs.chat.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -29,9 +25,6 @@ class MessageServiceTests {
 
     @Mock
     private MessageRepository messageRepository;
-
-    @Mock
-    private PasswordEncoder passwordEncoder;
 
     private MessageService messageService;
 
@@ -89,7 +82,7 @@ class MessageServiceTests {
         given(messageRepository.save(any())).willReturn(Mono.just(message0));
 
         StepVerifier.create(messageService.saveMessage(message0, "0"))
-                .expectNextMatches(m -> m.getContent().equals("Test"))
+                .expectNextMatches(m -> m.getContent().equals(message0.getContent()))
                 .verifyComplete();
     }
 
